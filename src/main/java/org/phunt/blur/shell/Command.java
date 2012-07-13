@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.phunt.blur.blur_shell;
+package org.phunt.blur.shell;
 
 import java.io.PrintWriter;
 

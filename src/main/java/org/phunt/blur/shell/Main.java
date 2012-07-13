@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.phunt.blur.blur_shell;
+package org.phunt.blur.shell;
 
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -35,8 +35,8 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.phunt.blur.blur_shell.Command.CommandException;
-import org.phunt.blur.blur_shell.Main.QuitCommand.QuitCommandException;
+import org.phunt.blur.shell.Command.CommandException;
+import org.phunt.blur.shell.Main.QuitCommand.QuitCommandException;
 
 import com.google.common.collect.ImmutableMap;
 import com.nearinfinity.blur.thrift.generated.Blur.Client;

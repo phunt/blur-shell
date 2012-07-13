@@ -16,7 +16,24 @@
  * limitations under the License.
  */
 
-/**
- *
- */
-package org.phunt.blur.blur_shell;
+package org.phunt.blur.shell;
+
+import java.io.PrintWriter;
+
+import org.apache.thrift.TException;
+
+import com.nearinfinity.blur.thrift.generated.Blur.Client;
+import com.nearinfinity.blur.thrift.generated.BlurException;
+
+public class ListTablesCommand extends Command {
+  @Override
+  public void doit(PrintWriter out, Client client, String[] args)
+      throws CommandException, TException, BlurException {
+    out.println("tables: " + client.tableList());
+  }
+
+  @Override
+  public String help() {
+    return "list tables";
+  }
+}

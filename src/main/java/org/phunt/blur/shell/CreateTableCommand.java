@@ -16,40 +16,48 @@
  * limitations under the License.
  */
 
-package org.phunt.blur.blur_shell;
+package org.phunt.blur.shell;
 
 import java.io.PrintWriter;
 
 import org.apache.thrift.TException;
 
+import com.nearinfinity.blur.thrift.generated.AnalyzerDefinition;
 import com.nearinfinity.blur.thrift.generated.Blur.Client;
 import com.nearinfinity.blur.thrift.generated.BlurException;
-import com.nearinfinity.blur.thrift.generated.FetchResult;
-import com.nearinfinity.blur.thrift.generated.FetchRowResult;
-import com.nearinfinity.blur.thrift.generated.Row;
-import com.nearinfinity.blur.thrift.generated.Selector;
+import com.nearinfinity.blur.thrift.generated.TableDescriptor;
 
-public class GetRowCommand extends Command {
+public class CreateTableCommand extends Command {
   @Override
   public void doit(PrintWriter out, Client client, String[] args)
       throws CommandException, TException, BlurException {
-    if (args.length != 3) {
+    if (args.length != 4) {
       throw new CommandException("Invalid args: " + help());
     }
-    String tablename = args[1];
-    String rowId = args[2];
+    String tableuri = args[1];
+    String tablename = args[2];
+    int shardCount = Integer.parseInt(args[3]);
 
-    Selector selector = new Selector();
-    selector.setRowId(rowId);
-    FetchResult fetchRow = client.fetchRow(tablename, selector);
-    FetchRowResult rowResult = fetchRow.getRowResult();
-    Row row = rowResult.getRow();
+    AnalyzerDefinition ad = new AnalyzerDefinition();
 
-    out.println(row);
+    TableDescriptor td = new TableDescriptor(); 
+    td.setTableUri(tableuri);
+    td.setCluster("default");
+    td.setAnalyzerDefinition(ad);
+    td.setName(tablename);
+
+    td.setShardCount(shardCount);
+
+    if (Main.debug) {
+      out.println(td.toString());
+      out.flush();
+    }
+
+    client.createTable(td);
   }
 
   @Override
   public String help() {
-    return "display the specified row, args; tablename query";
+    return "create the named table, args; tableuri tablename shardcount";
   }
 }

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.phunt.blur.blur_shell;
+package org.phunt.blur.shell;
 
 import java.io.PrintWriter;
 
@@ -24,45 +24,21 @@ import org.apache.thrift.TException;
 
 import com.nearinfinity.blur.thrift.generated.Blur.Client;
 import com.nearinfinity.blur.thrift.generated.BlurException;
-import com.nearinfinity.blur.thrift.generated.BlurQuery;
-import com.nearinfinity.blur.thrift.generated.BlurResult;
-import com.nearinfinity.blur.thrift.generated.BlurResults;
-import com.nearinfinity.blur.thrift.generated.Selector;
-import com.nearinfinity.blur.thrift.generated.SimpleQuery;
 
-public class QueryCommand extends Command {
+public class TableStatsCommand extends Command {
   @Override
   public void doit(PrintWriter out, Client client, String[] args)
       throws CommandException, TException, BlurException {
-    if (args.length != 3) {
+    if (args.length != 2) {
       throw new CommandException("Invalid args: " + help());
     }
     String tablename = args[1];
-    String query = args[2];
 
-    BlurQuery blurQuery = new BlurQuery();
-    SimpleQuery simpleQuery = new SimpleQuery();
-    simpleQuery.setQueryStr(query);
-    blurQuery.setSimpleQuery(simpleQuery);
-    blurQuery.setSelector(new Selector());
-
-    if (Main.debug) {
-      out.println(blurQuery);
-    }
-
-    BlurResults blurResults = client.query(tablename, blurQuery);
-
-    if (Main.debug) {
-      out.println("shardinfo: " + blurResults.getShardInfo());
-    }
-
-    for (BlurResult result : blurResults.getResults()) {
-      out.println(result);
-    }
+    out.println(client.tableStats(tablename));
   }
 
   @Override
   public String help() {
-    return "query the named table, args; tablename query";
+    return "print stats for the named table";
   }
 }

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.phunt.blur.blur_shell;
+package org.phunt.blur.shell;
 
 import java.io.PrintWriter;
 
@@ -24,21 +24,32 @@ import org.apache.thrift.TException;
 
 import com.nearinfinity.blur.thrift.generated.Blur.Client;
 import com.nearinfinity.blur.thrift.generated.BlurException;
+import com.nearinfinity.blur.thrift.generated.FetchResult;
+import com.nearinfinity.blur.thrift.generated.FetchRowResult;
+import com.nearinfinity.blur.thrift.generated.Row;
+import com.nearinfinity.blur.thrift.generated.Selector;
 
-public class TableStatsCommand extends Command {
+public class GetRowCommand extends Command {
   @Override
   public void doit(PrintWriter out, Client client, String[] args)
       throws CommandException, TException, BlurException {
-    if (args.length != 2) {
+    if (args.length != 3) {
       throw new CommandException("Invalid args: " + help());
     }
     String tablename = args[1];
+    String rowId = args[2];
 
-    out.println(client.tableStats(tablename));
+    Selector selector = new Selector();
+    selector.setRowId(rowId);
+    FetchResult fetchRow = client.fetchRow(tablename, selector);
+    FetchRowResult rowResult = fetchRow.getRowResult();
+    Row row = rowResult.getRow();
+
+    out.println(row);
   }
 
   @Override
   public String help() {
-    return "print stats for the named table";
+    return "display the specified row, args; tablename query";
   }
 }

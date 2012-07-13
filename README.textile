@@ -10,7 +10,7 @@ h2. Usage
 
 Currently the easiest way to run is 
 
-mvn exec:java -Dexec.mainClass="org.phunt.blur.blur_shell.Main" -Dexec.args="host:port"
+mvn exec:java -Dexec.mainClass="org.phunt.blur.shell.Main" -Dexec.args="host:port"
 
 Note: "blur":https://github.com/nearinfinity/blur 0.1.0 must be installed locally. (i.e. "mvn install" it)
 
