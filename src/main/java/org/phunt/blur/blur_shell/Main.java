@@ -35,6 +35,7 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+import org.phunt.blur.blur_shell.Command.CommandException;
 import org.phunt.blur.blur_shell.Main.QuitCommand.QuitCommandException;
 
 import com.google.common.collect.ImmutableMap;
@@ -115,6 +116,9 @@ public class Main {
         .put("listtables", new ListTablesCommand())
         .put("createtable", new CreateTableCommand())
         .put("tablestats", new TableStatsCommand())
+        .put("query", new QueryCommand())
+        .put("getrow", new GetRowCommand())
+        .put("mutaterow", new MutateRowCommand())
         .build();
 
     try {
@@ -151,17 +155,34 @@ public class Main {
 
           String line;
           PrintWriter out = new PrintWriter(reader.getOutput());
-          while ((line = reader.readLine()) != null) {
-            String[] commandArgs = line.split("\\s");
-            Command command = commands.get(commandArgs[0]);
-            if (command == null) {
-              out.println("unknown command \"" + commandArgs[0] + "\"");
-            } else {
-              command.doit(out, client, commandArgs);
+          try {
+            while ((line = reader.readLine()) != null) {
+              String[] commandArgs = line.split("\\s");
+              Command command = commands.get(commandArgs[0]);
+              if (command == null) {
+                out.println("unknown command \"" + commandArgs[0] + "\"");
+              } else {
+                try {
+                  command.doit(out, client, commandArgs);
+                } catch (QuitCommandException e) {
+                  // exit gracefully
+                  System.exit(0);
+                } catch (CommandException e) {
+                  out.println(e.getMessage());
+                  if (debug) {
+                    e.printStackTrace(out);
+                  }
+                } catch (BlurException e) {
+                  out.println(e.getMessage());
+                  if (debug) {
+                    e.printStackTrace(out);
+                  }
+                }
+              }
             }
+          } finally {
+            out.close();
           }
-      } catch (QuitCommandException e) {
-        // exit gracefully
       } finally {
           trans.close();
       }
