@@ -114,6 +114,7 @@ public class Main {
         .put("quit", new QuitCommand())
         .put("listtables", new ListTablesCommand())
         .put("createtable", new CreateTableCommand())
+        .put("tablestats", new TableStatsCommand())
         .build();
 
     try {
