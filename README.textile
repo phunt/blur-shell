@@ -1,0 +1,16 @@
+h1. Blur shell
+
+*Author: "Patrick Hunt":http://people.apache.org/~phunt/* (follow me on "twitter":http://twitter.com/phunt)
+
+h2. Summary
+
+"This project":http://github.com/phunt/blur-shell is a jline based shell which can attach to a "Blur":https://github.com/nearinfinity/blur server.
+
+h2. Usage
+
+Currently the easiest way to run is 
+
+mvn exec:java -Dexec.mainClass="org.phunt.blur.blur_shell.Main" -Dexec.args="host:port"
+
+Note: "blur":https://github.com/nearinfinity/blur 0.1.0 must be installed locally. (i.e. "mvn install" it)
+
