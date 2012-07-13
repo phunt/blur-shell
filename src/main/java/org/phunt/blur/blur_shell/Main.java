@@ -43,7 +43,8 @@ import com.nearinfinity.blur.thrift.generated.Blur.Client;
 import com.nearinfinity.blur.thrift.generated.BlurException;
 
 public class Main {
-  static boolean debug;
+  /** is debugging enabled - off by default */
+  static boolean debug = false;
 
   private static Map<String, Command> commands;
   
