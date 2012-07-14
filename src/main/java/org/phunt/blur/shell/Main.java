@@ -120,6 +120,7 @@ public class Main {
         .put("query", new QueryCommand())
         .put("getrow", new GetRowCommand())
         .put("mutaterow", new MutateRowCommand())
+        .put("indexaccesslog", new IndexAccessLogCommand())
         .build();
 
     try {
