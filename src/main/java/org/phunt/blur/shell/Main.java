@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import jline.console.ConsoleReader;
 import jline.console.completer.Completer;
@@ -45,6 +46,8 @@ import com.nearinfinity.blur.thrift.generated.BlurException;
 public class Main {
   /** is debugging enabled - off by default */
   static boolean debug = false;
+  /** is timing enabled - off by default */
+  static boolean timed = false;
 
   private static Map<String, Command> commands;
   
@@ -69,6 +72,26 @@ public class Main {
     @Override
     public String help() {
       return "toggle debugging on/off";
+    }
+    
+  }
+
+  private static class TimedCommand extends Command {
+
+    @Override
+    public void doit(PrintWriter out, Client client, String[] args)
+        throws CommandException, TException, BlurException {
+      if (timed == true) {
+        timed = false;
+      } else {
+        timed = true;
+      }
+      out.println("timing of commands is now " + (timed ? "on" : "off"));
+    }
+
+    @Override
+    public String help() {
+      return "toggle timing of commands on/off";
     }
     
   }
@@ -113,6 +136,7 @@ public class Main {
     commands = new ImmutableMap.Builder<String,Command>()
         .put("help", new HelpCommand())
         .put("debug", new DebugCommand())
+        .put("timed", new TimedCommand())
         .put("quit", new QuitCommand())
         .put("listtables", new ListTablesCommand())
         .put("createtable", new CreateTableCommand())
@@ -164,6 +188,7 @@ public class Main {
               if (command == null) {
                 out.println("unknown command \"" + commandArgs[0] + "\"");
               } else {
+                long start = System.nanoTime();
                 try {
                   command.doit(out, client, commandArgs);
                 } catch (QuitCommandException e) {
@@ -178,6 +203,12 @@ public class Main {
                   out.println(e.getMessage());
                   if (debug) {
                     e.printStackTrace(out);
+                  }
+                } finally {
+                  if (timed) {
+                    out.println("Last command took "
+                        + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start)
+                        + "ms");
                   }
                 }
               }
