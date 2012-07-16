@@ -145,6 +145,7 @@ public class Main {
         .put("removetable", new RemoveTableCommand())
         .put("describetable", new DescribeTableCommand())
         .put("tablestats", new TableStatsCommand())
+        .put("schema", new SchemaTableCommand())
         .put("query", new QueryCommand())
         .put("getrow", new GetRowCommand())
         .put("mutaterow", new MutateRowCommand())
