@@ -183,8 +183,9 @@ public class Main {
           PrintWriter out = new PrintWriter(reader.getOutput());
           try {
             while ((line = reader.readLine()) != null) {
-              // ignore comments
-              if (line.startsWith("#")) {
+              line = line.trim();
+              // ignore empty lines and comments
+              if (line.length() == 0 || line.startsWith("#")) {
                 continue;
               }
               String[] commandArgs = line.split("\\s");
