@@ -150,6 +150,8 @@ public class Main {
         .put("getrow", new GetRowCommand())
         .put("mutaterow", new MutateRowCommand())
         .put("indexaccesslog", new IndexAccessLogCommand())
+        .put("shardclusterlist", new ShardClusterListCommand())
+        .put("shardserverlayout", new ShardServerLayoutCommand())
         .build();
 
     try {
