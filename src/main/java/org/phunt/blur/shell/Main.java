@@ -143,6 +143,7 @@ public class Main {
         .put("enabletable", new EnableDisableTableCommand())
         .put("disabletable", new EnableDisableTableCommand())
         .put("removetable", new RemoveTableCommand())
+        .put("describetable", new DescribeTableCommand())
         .put("tablestats", new TableStatsCommand())
         .put("query", new QueryCommand())
         .put("getrow", new GetRowCommand())
