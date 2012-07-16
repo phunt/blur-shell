@@ -45,12 +45,13 @@ public class IndexAccessLogCommand extends Command {
   @Override
   public void doit(PrintWriter out, Client client, String[] args)
       throws CommandException, TException, BlurException {
-    if (args.length < 5) {
+    if (args.length < 6) {
       throw new CommandException("Invalid args: " + help());
     }
     File logfile = new File(args[1]);
-    String tablename = args[2];
-    String regex = args[3];
+    int batchSize = Integer.parseInt(args[2]);
+    String tablename = args[3];
+    String regex = args[4];
 
     if (Main.debug) {
       out.println(regex);
@@ -70,8 +71,8 @@ public class IndexAccessLogCommand extends Command {
           }
 
           List<Column> columns = new ArrayList<Column>();
-          for (int i = 4; i < args.length; i++) {
-            columns.add(new Column(args[i], m.group(i - 4)));
+          for (int i = 5; i < args.length; i++) {
+            columns.add(new Column(args[i], m.group(i - 5)));
           }
 
           Record record = new Record();
@@ -94,7 +95,7 @@ public class IndexAccessLogCommand extends Command {
 
           mutations.add(mutation);
 
-          if (mutations.size() == 10) {
+          if (mutations.size() == batchSize) {
             client.mutateBatch(mutations);
             mutations.clear();
           }
@@ -113,6 +114,6 @@ public class IndexAccessLogCommand extends Command {
 
   @Override
   public String help() {
-    return "index an access log, args; file tablename regex colnames+";
+    return "index an access log, args; file batchsize tablename regex colnames+";
   }
 }
